@@ -1,0 +1,19 @@
+{-# STDLIB_VERSION 4 #-}
+{-# CONTENT_TYPE DAPP #-}
+{-# SCRIPT_TYPE ACCOUNT #-}
+
+let one  = base58'ErvMyvsuzxpJtrmAGDvX4ALwzcNWZAVMdJBRLYaUEKW'
+let two  = base58'DGW2gVYMGhgqhMjxiy4aWMAnrpDYoqfxT7fzdTKjyLZZ'
+let four = base58'Cg4SF41CnyPnNEVDTrXan5SQVqnBSxVvLjzYc9MuH2iq'
+
+@Verifier(tx)
+func verify() ={
+
+let oneSigned  = if(sigVerify(tx.bodyBytes, tx.proofs[0], one  )) then 1 else 0
+let twoSigned    = if(sigVerify(tx.bodyBytes, tx.proofs[1], two    )) then 1 else 0
+let threeSigned = if(sigVerify(tx.bodyBytes, tx.proofs[2], four )) then 1 else 0
+
+  match (tx) {
+    case _ => oneSigned + twoSigned + threeSigned >= 2
+  }
+}

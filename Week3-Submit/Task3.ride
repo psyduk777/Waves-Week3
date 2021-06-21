@@ -1,0 +1,30 @@
+{-# STDLIB_VERSION 3 #-}
+{-# CONTENT_TYPE DAPP #-}
+{-# SCRIPT_TYPE ACCOUNT #-}
+
+
+@Callable(i)
+func purchase(item: String) = {
+  let pmt = i.payment.extract()
+  
+  if (item != "A") then throw("We only sell A") else {
+  if (pmt.assetId.isDefined()) then throw("Can use Waves only at the moment")
+
+  else{
+    let customerAddress = i.caller.bytes.toBase58String()
+    let price = 5
+    if (pmt.amount < price) then throw("Purchase amount cannot be less than item price")
+    else if (pmt.amount > price) then throw("Purchase amount cannot be higher than item price")
+    else {
+      WriteSet([
+      DataEntry("status:purchase_item_A_customer_" + customerAddress, "confirmed"),
+      DataEntry("price:purchase_item_A_customer_" + customerAddress, price)
+      ])
+
+    }
+  }
+
+  }
+
+
+}
